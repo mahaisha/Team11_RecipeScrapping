@@ -1,0 +1,16 @@
+{
+    "diabetes": "cream of rice,rice,flour,rice,rava,corn,sugar,White Rice,White bread,Processed grains,pasta,Sweetened Beverages,Soda,flavoured water,Gatorade,Apple Juice,orange juice,pomegranate juice,margarines,peanut butter,spreads,frozen foods,Flavoured curd,Flavoured yogurt,corn flakes,puffed rice,bran flakes,instant oatmeal,Honey,Maple syrup,Jaggery,Sweets,Candies ,Chocolates ,Alcoholic beverages,Bacon,sausages,hot dog,deli meats,chicken nuggets,chicken patties,Jams,Jelly,mango pickle,cucumber pickle,tomatoes,Canned pineapple,Canned peaches,Canned mangos,Canned pear,Canned mixed fruitCanned mandarine oranges,Canned cherries,Chips,Mayonnaise,Palmolein oil,powdered milk,beans,peas,corn,Doughnuts,cakes,pastries,cookies,croissants,Sweetened tea,coffee,Packaged snacks,Soft drinks,Banana,melon,Dairy Milk,butter,cheese",
+    "hypothyroid": "Tofu,Edamame,Tempeh,Cauliflower,Cabbage,Broccoli,Kale,Spinach,Sweet potatoes,Strawberries,Pine nuts,Peanuts,Peaches,Green tea,Coffee,Alcohol,Soy milk,White bread,Cakes,pastries,Fried food,Sugar,ham,bacon,salami,sausages,Frozen food,Gluten,Sodas,Energy drinks,caffeine,noodles,soups,salad dressings,sauces,Candies",
+    "hypertension": "Salt, chips,pretzels,crackers,Caffeine,tea,soft drinks,Alcohol,Frozen food,bacon,ham,Pickles,Processed food,canned food,Fried food,Sauces,mayonnaise,bacon,sausages,deli meats,White rice,white bread",
+	"pcos": "Cakes,Pastries,White bread,Fried food,Pizza,Burger,Carbonated beverages,sweets,icecreams,soda,juices,Red meat,Processed meat,Dairy,Soy products,Gluten,Pasta,White rice,Doughnuts,Fries,Coffee,vegetable oil,soybean oil,canola oil,rapeseed oil,sunflower oil,safflower oil",
+	 "diabetesgoodingredients": "Broccoli,Pumpkin,Pumpkin seeds,Chia seeds,Flaxseeds,Apples,Nuts,Lady finger,Okra,Beans,raspberries,strawberries,blueberries,blackberries,Eggs,Yogurt,Bitter gaurd,Rolled oats,Steel cut oats,chicken,fish,quinoa,Mushroom",
+    "hypertensiongoodingredients": "Beetroot,blueberries,strawberries,Bananas,Avocado,Tomato,Sweet potato,Mushroom,Celery,Kiwi,Dark chocolate (50-70%),Watermelon,Spinach,cabbage,romaine lettuce,mustard greens,broccoli,argula,fennel,kale,Garlic,Pomegranate,Cinnamon,Pistachios,Chia seeds,Yogurt,unsalted nuts,chicken,fish,turkey,Low-fat yogurt,quinoa",
+    "hypothyroidgoodingredients": "Saltwater fish,oyesters,shellfish,Eggs,Dairy,Nuts,Chicken,Pumpkin seeds,Seaweed,Iodized salt,Brazil nuts,Blue berries,Low-fat yogurt,Brown rice,quinoa,Mushroom",
+	"pcosgoodingredients": "High fiber fruits,vegetables",
+	"allergy": "MILK,SOY,SESAME,PEANUTS,WALNUT,ALMOND,HAZELNUT,PECAN,CASHEW,PISTACHIO,SHELL FISH,SEA FOOD",
+	"path": "src\\test\\resources",
+	"property": "D:\\Ancy\\Hackathon\\WebScraping\\drivers\\edgedriver_win64\\msedgedriver.exe",
+	"url": "https://www.tarladalal.com/RecipeAtoZ.aspx?beginswith=",
+	"paglist": "Z@2"
+	
+}
