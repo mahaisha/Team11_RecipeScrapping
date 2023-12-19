@@ -197,19 +197,24 @@ public class WebScrapping {
 						// Getting Food Category(Veg/non-veg/vegan/Jain/Egg)
 
 						String Food_Category = "";
-						String Search_text2[] = { "VEG", "NON-VEG", "VEGAN", "JAIN" };
+						String Search_text2[] = { "VEG", "NON-VEG", "JAIN" };
 					
 						for (String text : Search_text2) {
 							
 							if (Search_item.getText().toUpperCase().contains(text)) {
 								if (Search_item.getText().toUpperCase().contains("VEG")
+										&& (!Search_item.getText().toUpperCase().contains("VEGAN"))
 										&& (Ingredients_name.toUpperCase().contains("EGG"))
 										&& (!Ingredients_name.toUpperCase().contains("EGGPLANT"))
 										&& (!Search_item.getText().toUpperCase().contains("VEGGIE"))
 										&& (!Ingredients_name.toUpperCase().contains("EGGLESS"))
 										&& (!Search_item.getText().toUpperCase().contains("EGGLESS")))
 									Food_Category = "EGGETARIAN";
-								else
+								else if (Search_item.getText().toUpperCase().contains("VEGAN") ||
+								        (URL.contains("VEGAN")))
+								         
+									Food_Category = "VEGAN";
+								else		
 									Food_Category = text;
 							}
 
@@ -220,6 +225,8 @@ public class WebScrapping {
 								&& (!Ingredients_name.toUpperCase().contains("EGGLESS"))
 								&& (!Search_item.getText().toUpperCase().contains("EGGLESS")))
 							Food_Category = "EGGETARIAN";
+						
+					
 
 						// Getting Targeted Morbid Condition
 						String Eatable = "";
@@ -265,6 +272,8 @@ public class WebScrapping {
 						} else if (Ingredients_name.toUpperCase().contains("EGG")) {
 							Allergy_Information = Allergy_Information + "\n" + "EGG";
 						}
+						
+						
 
 						// Checking if Add ingredients are present
 						String IsDiabGoodIndrdientpresent = "No";
