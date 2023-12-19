@@ -30,34 +30,35 @@ public class WebScrapping {
 	static DateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss");
 	static String strDate = dateFormat.format(date);
 
-
 	public static void main(String[] args) throws InterruptedException, IOException {
-		
-		
 
+		//Object Mapper provides functionality for reading and writing JSON as class Objects
 		ObjectMapper om = new ObjectMapper();
-		Eliminator elimatorclass = om.readValue(
-				new File("src/main/resources/configuration.json"), Eliminator.class);
+		Eliminator elimatorclass = om.readValue(new File("src/main/resources/configuration.json"), Eliminator.class);
 
-		
-		
+		//Reading the Alphabets and corresponding page numbers from Json file and storing it as Key Value pair
 		Map<String, Integer> hm = new HashMap<String, Integer>();
-		
+
 		String pagelistvalues[] = elimatorclass.paglist.split(",");
-		
-		 for (String paglist : pagelistvalues) {
-			 
-			 String pageval[] = paglist.split("@");
-			 
-	            hm.put(pageval[0], Integer.parseInt(pageval[1]));
-	        }
 
+		for (String paglist : pagelistvalues) {
 
+			String pageval[] = paglist.split("@");
+
+			hm.put(pageval[0], Integer.parseInt(pageval[1]));// hm.put(A, 22)
+		}
+
+		//initializing web driver
 		System.setProperty("Webdriver.edge.driver", elimatorclass.property);
 		int row = 1;
+
+		//dynamically taking the path from json file 
+		String path = elimatorclass.path + strDate + ".xlsx";
 		
-		 String  path = elimatorclass.path  + strDate + ".xlsx";
-		 XLUtility xlutil = new XLUtility(path);
+		//Creating object for class which has method to write it to excel
+		XLUtility xlutil = new XLUtility(path);
+		
+		//Handle exception 
 		try {
 
 			xlutil.setCellData("Sheet1", 0, 0, "Receipe ID");
@@ -84,11 +85,14 @@ public class WebScrapping {
 
 		String url = "";
 
+		//iterate through each alphabet and page index and scrap all the links within the page index
 		for (Map.Entry<String, Integer> me : hm.entrySet()) {
 
 			for (int i = 1; i <= me.getValue(); i++) {
 				try {
+					System.out.println("--------------------------------------------------- page is " + i);
 					
+					//opening the driver
 					WebDriver driver = new EdgeDriver();
 					driver.manage().window().maximize();
 					url = elimatorclass.url + me.getKey() + "&pageindex=" + i;
@@ -97,8 +101,6 @@ public class WebScrapping {
 					ArrayList<String> links = new ArrayList<>(14);
 
 					for (WebElement e : raw_recipes) {
-
-						// links.add(e.findElement(By.tagName("a")).getAttribute("href"));
 
 						String clickonlinkTab = Keys.chord(Keys.CONTROL, Keys.ENTER);
 
@@ -115,30 +117,27 @@ public class WebScrapping {
 
 						// Getting URL
 						String URL = driver.getCurrentUrl();
-						// System.out.println("URL: "+ URL);
+						
 
 						// Getting Recipe Name
 						String Recipe_Name = "";
 						String Recipe_Name1 = driver.getCurrentUrl().split(".com")[1].split("/")[1];
-						// System.out.println("RECIPE_NAME: " + Recipe_Name);
+						
 						String list[] = Recipe_Name1.split("-");
-						if(list.length<3)
-						{
+						if (list.length < 3) {
 							for (int J = 0; J < list.length - 1; J++)
 								Recipe_Name = Recipe_Name + "\t" + list[J];
-						}
-						else {
-						for (int J = 0; J < list.length - 2; J++)
-							Recipe_Name = Recipe_Name + "\t" + list[J];
+						} else {
+							for (int J = 0; J < list.length - 2; J++)
+								Recipe_Name = Recipe_Name + "\t" + list[J];
 						}
 						// Getting Recipe ID
 						String RecipeID = list[list.length - 1];
-
-						RecipeID = RecipeID.replace('r', ' ');
-						// System.out.println("RECIPE_ID: " + RecipeID);
+						RecipeID = RecipeID.replace('r', ' ');					
 
 						if (RecipeID.contains("RecipeAtoZ"))
 							continue;
+						
 						// Getting Prp time & Cook time
 						String Preparation_Time = driver.findElement(By.xpath("//time[@itemprop ='prepTime']"))
 								.getText();
@@ -149,84 +148,79 @@ public class WebScrapping {
 						String Search_text[] = { "BREAKFAST", "LUNCH", "DINNER", "SNACK" };
 
 						WebElement Search_item = driver.findElement(By.id("recipe_tags"));
-						// System.out.println(Search_item.getText());
+						
 						for (String text : Search_text) {
-							System.out.println(text);
+							
 							if (Search_item.getText().toUpperCase().contains(text))
 								Recipe_Category = Recipe_Category + "\n" + text;
 
 						}
-						
 
-						
 						// Nutrition Value
 						String Nutrition = "";
 						List<WebElement> list_values = driver.findElements(By.xpath("//table[@id='rcpnutrients']//td"));
 						String Nutrition_Values = "";
 						for (WebElement e1 : list_values) {
 							Nutrition = Nutrition + "\t" + e1.getText();
-							// System.out.println(e1.getText());
+							
 						}
 
-						System.out.println("METHOD____________");
+					
 
 						// Getting Preparation Method
 						List<WebElement> Method = driver.findElements(By.xpath("//span[@itemprop='text']"));
 						String method = "";
 						for (WebElement e1 : Method) {
 							method = method + "\n" + e1.getText();
-							// System.out.println(e1.getText());
+							
 						}
 
 						// Getting Ingredients
 						List<WebElement> ingredints = driver
 								.findElements(By.xpath("//span[@itemprop='recipeIngredient']"));
-						// System.out.println("INGREDIENTS_________");
+						
 						String Ingredients = "";
 						for (WebElement e1 : ingredints) {
 							Ingredients = Ingredients + "\n" + e1.getText();
-							// System.out.println(e1.getText());
+							
 						}
 
 						List<WebElement> ingredints_name = driver
 								.findElements(By.xpath("//span[@itemprop='recipeIngredient']/a/span"));
-						// System.out.println("INGREDIENTS_________");
+						
 						String Ingredients_name = "";
 						for (WebElement e1 : ingredints_name) {
 							Ingredients_name = Ingredients_name + "\n" + e1.getText();
-							System.out.println(e1.getText());
+							
 						}
+						
 						// Getting Food Category(Veg/non-veg/vegan/Jain/Egg)
 
 						String Food_Category = "";
-						String Search_text2[] = { "VEG", "NON-VEG", "VEGAN", "JAIN"};
-						// System.out.println(Search_item.getText());
+						String Search_text2[] = { "VEG", "NON-VEG", "VEGAN", "JAIN" };
+					
 						for (String text : Search_text2) {
-							System.out.println(text);
-							if (Search_item.getText().toUpperCase().contains(text)) 
-							{
-								if(Search_item.getText().toUpperCase().contains("VEG")&&
-										(Ingredients_name.toUpperCase().contains("EGG"))
-								&& (!Ingredients_name.toUpperCase().contains("EGGPLANT"))&& 
-										(!Search_item.getText().toUpperCase().contains("VEGGIE"))&&
-									 (!Ingredients_name.toUpperCase().contains("EGGLESS")) &&
-									 (!Search_item.getText().toUpperCase().contains("EGGLESS")))
-									Food_Category= "EGGETARIAN";
-								else	
+							
+							if (Search_item.getText().toUpperCase().contains(text)) {
+								if (Search_item.getText().toUpperCase().contains("VEG")
+										&& (Ingredients_name.toUpperCase().contains("EGG"))
+										&& (!Ingredients_name.toUpperCase().contains("EGGPLANT"))
+										&& (!Search_item.getText().toUpperCase().contains("VEGGIE"))
+										&& (!Ingredients_name.toUpperCase().contains("EGGLESS"))
+										&& (!Search_item.getText().toUpperCase().contains("EGGLESS")))
+									Food_Category = "EGGETARIAN";
+								else
 									Food_Category = text;
 							}
-						
 
 						}
-						if(Ingredients_name.toUpperCase().contains("EGG")
-								&& (!Ingredients_name.toUpperCase().contains("EGGPLANT"))&& 
-										(!Search_item.getText().toUpperCase().contains("VEGGIE"))&&
-									 (!Ingredients_name.toUpperCase().contains("EGGLESS"))&&
-									 (!Search_item.getText().toUpperCase().contains("EGGLESS")))
+						if (Ingredients_name.toUpperCase().contains("EGG")
+								&& (!Ingredients_name.toUpperCase().contains("EGGPLANT"))
+								&& (!Search_item.getText().toUpperCase().contains("VEGGIE"))
+								&& (!Ingredients_name.toUpperCase().contains("EGGLESS"))
+								&& (!Search_item.getText().toUpperCase().contains("EGGLESS")))
 							Food_Category = "EGGETARIAN";
-						
-						
-						
+
 						// Getting Targeted Morbid Condition
 						String Eatable = "";
 
@@ -263,21 +257,16 @@ public class WebScrapping {
 								Allergy_Information = Allergy_Information + "\n" + text;
 
 						}
-						
-						if(Ingredients_name.toUpperCase().contains("EGGLESS"))
-						{
-							
-						}
-						else if(Ingredients_name.toUpperCase().contains("EGGPLANT"))
-						{
-							
-						}
-						else if(Ingredients_name.toUpperCase().contains("EGG"))
-						{
+
+						if (Ingredients_name.toUpperCase().contains("EGGLESS")) {
+
+						} else if (Ingredients_name.toUpperCase().contains("EGGPLANT")) {
+
+						} else if (Ingredients_name.toUpperCase().contains("EGG")) {
 							Allergy_Information = Allergy_Information + "\n" + "EGG";
 						}
-						
-                        // Checking if Add ingredients are present
+
+						// Checking if Add ingredients are present
 						String IsDiabGoodIndrdientpresent = "No";
 						String IsHyperTenGoodIndrdientpresent = "No";
 						String IsHypoTyrodGoodIndrdientpresent = "No";
@@ -299,17 +288,15 @@ public class WebScrapping {
 							IsPCOSGoodIndrdientpresent = "Yes";
 						}
 
-						if ((f1) || (f2) || (f3) || (f4))
-						{
-							if(RecipeID != null && !RecipeID.trim().isEmpty()) 
-							{							WritetoExcel(row, xlutil, RecipeID, Recipe_Name, URL, Recipe_Category, Food_Category,
-									Eatable, Allergy_Information, Ingredients, Preparation_Time, Cooking_Time, method,
-									Nutrition, IsDiabGoodIndrdientpresent, IsHyperTenGoodIndrdientpresent,
-									IsHypoTyrodGoodIndrdientpresent, IsPCOSGoodIndrdientpresent);
-							row++;
+						if ((f1) || (f2) || (f3) || (f4)) {
+							if (RecipeID != null && !RecipeID.trim().isEmpty()) {
+								WritetoExcel(row, xlutil, RecipeID, Recipe_Name, URL, Recipe_Category, Food_Category,
+										Eatable, Allergy_Information, Ingredients, Preparation_Time, Cooking_Time,
+										method, Nutrition, IsDiabGoodIndrdientpresent, IsHyperTenGoodIndrdientpresent,
+										IsHypoTyrodGoodIndrdientpresent, IsPCOSGoodIndrdientpresent);
+								row++;
 							}
 						}
-						
 
 					}
 
